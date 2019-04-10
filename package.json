@@ -1,0 +1,82 @@
+{
+  "name": "video-hash",
+  "version": "0.0.0-development",
+  "description": "Generates unique fingerprints for video files",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha",
+    "coveralls": "nyc --reporter=lcovonly npm test -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "docs": "jsdoc2md > README.md",
+    "semantic-release": "semantic-release"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "jsdoc2md": {
+    "template": "build/README.hbs",
+    "files": [
+      "./index.js",
+      "./lib/*.js"
+    ],
+    "partial": [
+      "./build/sig-name.hbs",
+      "./build/sig-link-parent.hbs",
+      "./build/sig-link.hbs"
+    ],
+    "module-index-format": "none",
+    "global-index-format": "grouped",
+    "member-index-format": "list"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KyleRoss/node-video-hash.git"
+  },
+  "keywords": [
+    "video",
+    "hash",
+    "fingerprint",
+    "finger",
+    "print",
+    "mp4",
+    "mpeg",
+    "avi",
+    "sha",
+    "unique",
+    "ffmpeg",
+    "file",
+    "hashing"
+  ],
+  "author": "Kyle Ross <thejavascriptguy@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KyleRoss/node-video-hash/issues"
+  },
+  "homepage": "https://github.com/KyleRoss/node-video-hash#readme",
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "@semantic-release/changelog": "^3.0.2",
+    "@semantic-release/git": "^7.0.8",
+    "coveralls": "^3.0.3",
+    "husky": "^1.3.1",
+    "jsdoc-to-markdown": "^4.0.1",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "semantic-release": "^15.13.3"
+  },
+  "dependencies": {
+    "event-to-promise": "^0.8.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "imghash": "0.0.3",
+    "make-dir": "^3.0.0",
+    "p-map-series": "^2.1.0"
+  }
+}
