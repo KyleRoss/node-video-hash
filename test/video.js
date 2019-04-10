@@ -172,7 +172,7 @@ describe('Video', () => {
             });
             
             describe ('with a video set', function() {
-                this.timeout(30000);
+                this.timeout(120000);
                 let video = new Video(VideoHash.defaults, ffmpeg(path.join(assets, 'test-video-1.mp4'))),
                     promise,
                     hash1, hash2;
