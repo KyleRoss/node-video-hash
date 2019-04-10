@@ -1,6 +1,6 @@
 {
   "name": "video-hash",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Generates unique fingerprints for video files",
   "main": "index.js",
   "directories": {
