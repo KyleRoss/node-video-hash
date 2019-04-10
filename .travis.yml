@@ -1,0 +1,33 @@
+dist: trusty
+sudo: required
+language: node_js
+node_js:
+  - "11"
+  - "10"
+  - "8"
+cache: npm
+
+os:
+  - linux
+
+before_install:
+  - sudo add-apt-repository -y ppa:mc3man/trusty-media
+  - sudo apt-get update
+  - sudo apt-get install -y ffmpeg
+
+jobs:
+  include:
+    - stage: test
+      script: npm run test
+      skip_cleanup: true
+      after_success: 'npm run coveralls'
+    - stage: release
+      node_js: lts/*
+      script: npm run docs
+      skip_cleanup: true
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npx semantic-release
+      if: branch = master AND type != pull_request
