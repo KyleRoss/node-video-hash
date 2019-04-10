@@ -1,0 +1,97 @@
+# video-hash
+[![npm](https://img.shields.io/npm/v/video-hash.svg?style=for-the-badge)](https://www.npmjs.com/package/video-hash)
+[![npm](https://img.shields.io/npm/dt/video-hash.svg?style=for-the-badge)](https://www.npmjs.com/package/video-hash)
+[![David](https://img.shields.io/david/KyleRoss/node-video-hash.svg?style=for-the-badge)](https://david-dm.org/KyleRoss/node-video-hash)
+[![Travis](https://img.shields.io/travis/KyleRoss/node-video-hash/master.svg?style=for-the-badge)](https://travis-ci.org/KyleRoss/node-video-hash)
+[![Coveralls](https://img.shields.io/coveralls/github/KyleRoss/node-video-hash.svg?style=for-the-badge)](https://coveralls.io/github/KyleRoss/node-video-hash)
+[![license](https://img.shields.io/github/license/KyleRoss/node-video-hash.svg?style=for-the-badge)](https://github.com/KyleRoss/node-video-hash/blob/master/LICENSE)
+[![Beerpay](https://img.shields.io/beerpay/KyleRoss/node-video-hash.svg?style=for-the-badge)](https://beerpay.io/KyleRoss/node-video-hash)
+
+Algorithm to fingerprint videos with relatively high accuracy and returns a hash. Achieved by capturing screenshots at particular intervals, hashing the pixels
+of each screenshot and creating a single hash from all of the generated pixel hashes. This package uses [FFmpeg](https://ffmpeg.org/) to take screenshots and 
+[FFprobe](https://ffmpeg.org/ffprobe.html) to retrieve metadata. Please note that this package is going to be slow depending on the size of video you are 
+fingerprinting.
+
+# Usage
+## Requirements
+In order to use this package, you must have the following requirements met:
+
+1. [FFmpeg](https://ffmpeg.org/) installed and in your PATH or a local binary.
+    - You can use a package like [ffmpeg-installer](https://www.npmjs.com/package/@ffmpeg-installer/ffmpeg) to provide precompiled binaries for your OS.
+2. [FFprobe](https://ffmpeg.org/ffprobe.html) installed and in your PATH or a local binary.
+    - You can use a package like [ffprobe-installer](https://www.npmjs.com/package/@ffprobe-installer/ffprobe) to provide precompiled binaries for your OS.
+
+## Install
+```
+npm install --save video-hash
+```
+
+## Quick Start
+This example shows how to get started using precompiled binaries:
+
+```bash
+npm install --save video-hash @ffmpeg-installer/ffmpeg @ffprobe-installer/ffprobe
+```
+
+```js
+const ffmpeg = require('@ffmpeg-installer/ffmpeg');
+const ffprobe = require('@ffprobe-installer/ffprobe');
+
+const vHash = require('video-hash')({
+    ffmpegPath: ffmpeg.path,
+    ffprobePath: ffprobe.path
+});
+
+async createFingerprint(videoPath) {
+    const video = vHash.video(videoPath);
+    
+    try {
+        let hash = await video.hash();
+        return hash;
+    } catch(err) {
+        throw err;
+    }
+}
+```
+
+# API Documentation
+{{#orphans ~}}
+{{>docs~}}
+{{/orphans~}}
+
+---
+
+## Algorithm
+Video Hash uses a basic algorithm to generate a hash for a video that will provide consistent results each time for the same provided options. This works 
+by taking captures at percentage-based intervals based off of the duration of the video. The module generates a number of captures to take from the video 
+using an equation like:
+
+```
+⌈(⌈duration⌉ * strength)⌉
+```
+
+To simplify, the video duration is rounded up to the nearest whole number and multiplied by the provided `strength` option. The resulting number is then rounded 
+up to the nearest whole number. From there, the dependency `fluent-ffmpeg` will generate an array of percentages based on the duration of the video for when 
+FFmpeg shoud capture a screenshot. If the duration of the video does not change, neither will the hash.
+
+After all of the captures are taken by FFmpeg, each one is hashed using [perceptual hashing](https://en.wikipedia.org/wiki/Perceptual_hashing) and stored. Once 
+the hashes are generated, all are combined and a final hash (SHA256 by default) is generated and returned.
+
+## Tests
+To run tests locally, ensure you have all of the requirements installed and run:
+
+```
+npm test
+```
+
+## Contributing
+When contributing to this package, please follow the guidelines below:
+
+1. Ensure the there are no ESLint errors in the code, following the `.eslintrc.yml` file in the repo.
+2. Write or update tests for any changes. I strive for 100% coverage, but 95% or higher is acceptable.
+3. Run the tests locally and ensure they pass.
+4. Commits must use the [conventional commits spec](https://www.conventionalcommits.org/en/v1.0.0-beta.3/#specification). If you do not, your commit will fail.
+5. Submit a pull request.
+
+## License
+MIT License
