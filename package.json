@@ -75,7 +75,7 @@
   "dependencies": {
     "event-to-promise": "^0.8.0",
     "fluent-ffmpeg": "^2.1.2",
-    "imghash": "0.0.3",
+    "imghash": "0.0.5",
     "make-dir": "^3.0.0",
     "p-map-series": "^2.1.0"
   }
